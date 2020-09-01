@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Identity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +26,17 @@ namespace Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+
+            /*
+             * The AddIdentity method’s type parameter are specified with the class used to represent users (AppUser) and the class used to represent roles (Identity Role).
+                The AddEntityFrameworkStores method specifies that Identity should use EF Core and the DB Content class which in the project is AppIdentityContext class.
+                The AddDefaultTokenProviders method adds the default token providers used to generate tokens for reset passwords, change email and change telephone number operations, 
+                    and for two factor authentication token generation.
+             */
+
+            services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+
             services.AddControllersWithViews();
         }
 
@@ -44,6 +58,7 @@ namespace Identity
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
