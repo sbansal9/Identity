@@ -51,11 +51,22 @@ namespace Identity.Controllers
 
         //    return View(userManager.Users);
         //}
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(
+            string sortOrder, 
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
+            ViewData["CurrentSort"] = sortOrder;
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["EmailSortParm"] = sortOrder == "Email" ? "email_desc" : "Email";
+
+            if (!string.IsNullOrEmpty(searchString))
+                pageNumber = 1;
+            else
+                searchString = currentFilter;
+
 
             ViewData["CurrentFilter"] = searchString;
 
@@ -86,7 +97,10 @@ namespace Identity.Controllers
                     users = users.OrderBy(s => s.UserName);
                     break;
             }
-            return View(await users.AsNoTracking().ToListAsync());
+
+            int pageSize = 2;
+            return View(await PaginatedList<AppUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
+            //return View(await users.AsNoTracking().ToListAsync());
         }
 
         public ViewResult Create() => View();
