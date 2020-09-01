@@ -99,6 +99,8 @@ namespace Identity.Controllers
             }
 
             int pageSize = 2;
+
+            //return Ok(await PaginatedList<AppUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
             return View(await PaginatedList<AppUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
             //return View(await users.AsNoTracking().ToListAsync());
         }
