@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 /*
  * https://www.yogihosting.com/aspnet-core-identity-roles/#rolemanager
@@ -41,14 +42,41 @@ namespace Identity.Controllers
             passwordHasher = passwordHash;
         }
 
-        public IActionResult Index()   // https://localhost:44327/Admin
-        {
-            /*
-             * All the Users accounts of Identity can be fetched from the Identity database by the use of Users property of the UserManager class. 
-             * The Users property will return an IEnumerable object.
-             */
+        //public IActionResult Index()   // https://localhost:44327/Admin
+        //{
+        //    /*
+        //     * All the Users accounts of Identity can be fetched from the Identity database by the use of Users property of the UserManager class. 
+        //     * The Users property will return an IEnumerable object.
+        //     */
 
-            return View(userManager.Users);
+        //    return View(userManager.Users);
+        //}
+        public async Task<IActionResult> Index(string sortOrder)
+        {
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["EmailSortParm"] = sortOrder == "Email" ? "email_desc" : "Email";
+            var users = from s in userManager.Users
+                           select s;
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    users = users.OrderByDescending(s => s.Id);
+                    break;
+                case "name_desc":
+                    users = users.OrderByDescending(s => s.UserName);
+                    break;
+                case "Email":
+                    users = users.OrderBy(s => s.Email);
+                    break;
+                case "email_desc":
+                    users = users.OrderByDescending(s => s.Email);
+                    break;
+                default:
+                    users = users.OrderBy(s => s.UserName);
+                    break;
+            }
+            return View(await users.AsNoTracking().ToListAsync());
         }
 
         public ViewResult Create() => View();
