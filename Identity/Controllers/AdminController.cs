@@ -51,13 +51,23 @@ namespace Identity.Controllers
 
         //    return View(userManager.Users);
         //}
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["EmailSortParm"] = sortOrder == "Email" ? "email_desc" : "Email";
+
+            ViewData["CurrentFilter"] = searchString;
+
             var users = from s in userManager.Users
                            select s;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(x => x.UserName.Contains(searchString) ||
+                                    x.Email.Contains(searchString));
+            }
+
             switch (sortOrder)
             {
                 case "id_desc":
