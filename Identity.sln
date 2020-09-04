@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "Identity\Identity.csproj", "{0F2DEFE1-0273-46A8-9ED7-BEDCAA254255}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{A83E50CE-8E51-4125-B0E0-A7D7C9D7FB13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Contracts.csproj", "{A83E50CE-8E51-4125-B0E0-A7D7C9D7FB13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{4063B592-09A1-4726-8DE0-7B9D64B9D5BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{4063B592-09A1-4726-8DE0-7B9D64B9D5BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{DD3D5B89-9132-42AA-ADEA-21E1C5115620}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{4063B592-09A1-4726-8DE0-7B9D64B9D5BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4063B592-09A1-4726-8DE0-7B9D64B9D5BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4063B592-09A1-4726-8DE0-7B9D64B9D5BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD3D5B89-9132-42AA-ADEA-21E1C5115620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD3D5B89-9132-42AA-ADEA-21E1C5115620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD3D5B89-9132-42AA-ADEA-21E1C5115620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD3D5B89-9132-42AA-ADEA-21E1C5115620}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
