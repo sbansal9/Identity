@@ -1,4 +1,5 @@
 ﻿using Identity.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,15 @@ namespace Identity.Data
             _context = context;
         }
 
-        public IEnumerable<Person> GetAll()
+        //public IEnumerable<Person> GetAll()
+        //{
+        //    return _context.Person.ToList();
+        //}
+        public async Task<List<Person>> GetAllAsync()
         {
-            return _context.Person.ToList();
+            return await _context.Person.ToListAsync();
         }
+
 
         public Person GetById(int id)
         {
@@ -26,10 +32,18 @@ namespace Identity.Data
         }
 
 
+        //public IEnumerable<Person> GetByManagerId(string mgrId)
+        //{
+        //    var result = _context.Person.Where(x => x.ManagerId == mgrId);
+        //    return result;
+        //}
 
 
-
-
+        public async Task<List<Person>> GetByManagerIdAsync(string mgrId)
+        {
+            var result = await _context.Person.Where(x => x.ManagerId == mgrId).ToListAsync();
+            return (result);
+        }
 
         ///// <summary>  
         ///// Get product by ID store procedure method.  
@@ -112,5 +126,7 @@ namespace Identity.Data
 
             _context.Person.Remove(p);
         }
+
+
     }
 }

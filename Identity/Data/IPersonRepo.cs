@@ -10,7 +10,12 @@ namespace Identity.Data
     {
         bool SaveChanges();
 
-        IEnumerable<Person> GetAll();
+        //IEnumerable<Person> GetAll();
+        Task<List<Person>> GetAllAsync();
+
+
+        //IEnumerable<Person> GetByManagerId(string mgrId);
+        public Task<List<Person>> GetByManagerIdAsync(string mgrId);
         Person GetById(int id);
         void Create(Person cmd);
         void Update(Person cmd);
