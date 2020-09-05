@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Identity.Data;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 /*
  * https://www.yogihosting.com/aspnet-core-identity-roles/#rolemanager
@@ -28,18 +30,31 @@ IsInRoleAsync(user, name)	    Returns true is the user is a member of a specifie
 */
 
 
-
 namespace Identity.Controllers
 {
     public class AdminController : Controller
     {
+
         private UserManager<AppUser> userManager;
         private IPasswordHasher<AppUser> passwordHasher;
+        private IServiceProvider _provider = null;
 
-        public AdminController(UserManager<AppUser> usrMgr, IPasswordHasher<AppUser> passwordHash)
+        public AdminController(UserManager<AppUser> usrMgr, IServiceProvider provider, IPasswordHasher<AppUser> passwordHash)
         {
             userManager = usrMgr;
             passwordHasher = passwordHash;
+
+
+
+
+            // Test
+            _provider = provider;
+            CreateRoles(_provider);
+
+
+
+
+
         }
 
         //public IActionResult Index()   // https://localhost:44327/Admin
@@ -99,6 +114,7 @@ namespace Identity.Controllers
             }
 
             int pageSize = 2;
+
 
             //return Ok(await PaginatedList<AppUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
             return View(await PaginatedList<AppUser>.CreateAsync(users.AsNoTracking(), pageNumber ?? 1, pageSize));
@@ -187,6 +203,55 @@ namespace Identity.Controllers
                 ModelState.AddModelError("", "User Not Found");
             return View("Index", userManager.Users);
         }
+
+
+        // https://stackoverflow.com/questions/42471866/how-to-create-roles-in-asp-net-core-and-assign-them-to-users
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            //initializing custom roles 
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+
+            var PersonManager = serviceProvider.GetRequiredService<IPersonRepo>();
+            PersonManager.GetAll();
+
+            string[] roleNames = { "Admin", "Manager", "Member" };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    //create the roles and seed them to the database: Question 1
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            //Here you could create a super user who will maintain the web app
+            //var poweruser = new AppUser
+            //{
+
+            //    UserName = Configuration["AppSettings:UserName"],
+            //    Email = Configuration["AppSettings:UserEmail"],
+            //};
+            ////Ensure you have these values in your appsettings.json file
+            //string userPWD = Configuration["AppSettings:UserPassword"];
+            //var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
+
+            //if (_user == null)
+            //{
+            //    var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
+            //    if (createPowerUser.Succeeded)
+            //    {
+            //        //here we tie the new user to the role
+            //        await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+            //    }
+            //}
+        }
+
+
 
         private void Errors(IdentityResult result)
         {

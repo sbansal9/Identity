@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Identity.Data;
 using Identity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,7 @@ namespace Identity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            services.AddDbContext<CommanderContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
             /*
              * The AddIdentity method’s type parameter are specified with the class used to represent users (AppUser) and the class used to represent roles (Identity Role).
@@ -36,6 +38,11 @@ namespace Identity
              */
 
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+
+
+            services.AddDbContext<CommanderContext>();
+            services.AddScoped<IPersonRepo, PersonRepo>();  // Create once per client request
+
 
             services.AddControllersWithViews();
         }
