@@ -1,0 +1,95 @@
+
+
+<#@ template debug="false" hostspecific="true" language="c#" #>
+<#@ output extension=".cs" #>
+
+<#@ assembly name="System" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+using System.Configuration;
+
+public static class ConnectionStrings
+{
+	<#
+		foreach(XElement c in ReadConfig())
+		{
+			string origName = c.Attribute(XName.Get("name")).Value;
+			string cleanName = CleanName(origName);
+	 #>
+
+			public static string <#= cleanName #>
+			{
+				get
+				{
+					return ConfigurationMananger.ConnectionStrings["<#= origName #>"].ConnectionString;
+				}
+			}
+		<#
+		}
+		 #>
+}
+
+
+<#+
+
+	private string CleanName(string name)
+	{
+		return name.Replace(" ", string.Empty).Replace("-", string.Empty);
+	}
+
+	private IEnumerable<XElement> ReadConfig()
+	{
+		string cfgPath = GetConfigFilePath();
+
+		if (string.IsNullOrEmpty(cfgPath))
+		{
+			return new List<XElement>();
+		}
+
+		XDocument cfg = XDocument.Load(cfgPath);
+		XElement csElement = cfg.Root.Element(XName.Get("connectionStrings"));
+
+		if (csElement == null)
+		{
+			Error("connectionStrings node was not found in the configuration file");
+			return new List<XElement>();
+		}
+
+		return csElement.Elements();
+	}
+
+	private string GetConfigFilePath()
+	{
+		FileInfo fi = new FileInfo(Host.TemplateFile);
+		string currentFolder = fi.Directory.FullName;
+
+		string appConfig = Path.Combine(currentFolder, "App.config");
+		string webConfig = Path.Combine(currentFolder, "Web.config");
+
+		if (File.Exists(appConfig)) { return appConfig; }
+		if (File.Exists(webConfig)) { return webConfig; }
+
+		Error("Could not find a configuration file!");
+
+		return string.Empty;
+	}
+
+
+ #>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -5,14 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Templates\TextTemplate.txt">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TextTemplate.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
@@ -31,16 +23,7 @@
   <ItemGroup>
     <None Update="Templates\TextTemplate.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>TextTemplate.txt</LastGenOutput>
-    </None>
-    <None Update="Templates\TextTemplate.txt">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>TextTemplate.tt</DependentUpon>
-    </None>
-    <None Update="Templates\XmlTemplate.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>XmlTemplate.cs</LastGenOutput>
+      <LastGenOutput>TextTemplate.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -49,10 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Templates\XmlTemplate.cs">
+    <Compile Update="Templates\TextTemplate.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>XmlTemplate.tt</DependentUpon>
+      <DependentUpon>TextTemplate.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
